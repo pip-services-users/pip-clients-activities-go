@@ -1,0 +1,7 @@
+{
+  "name": "pip-clients-activities-go",
+  "registry": "pipdevs/pip-clients-activities-go",
+  "repository": "github.com/pip-services-users/pip-clients-activities-go",
+  "version": "1.0.0",
+  "build": null
+}

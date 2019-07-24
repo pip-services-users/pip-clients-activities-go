@@ -1,0 +1,120 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "pip-services.users.activities.version1";
+option java_outer_classname = "ActivitiesProtoV1";
+option objc_class_prefix = "ACTIVITIES_CMD_V1";
+option go_package = "protos";
+
+package activities_v1;
+
+message ErrorDescription {
+  string type = 1;
+  string category = 2;
+  string code = 3;
+  string correlation_id = 4;
+  string status = 5;
+  string message = 6;
+  string cause = 7;
+  string stack_trace = 8;
+  map<string, string> details = 9;
+}
+
+message PagingParams {
+    int64 skip = 1;
+    int32 take = 2;
+    bool total = 3;
+}
+
+message Reference {
+    string id = 1;
+    string type = 2;
+    string name = 3;
+}
+
+message PartyActivity {
+    /* Identification */
+    string id = 1;
+
+    /* Identification fields */
+    string time = 2;
+    string type = 3;
+    Reference party = 4;
+
+    /* References objects (notes, goals, etc.) */
+    Reference ref_item = 5;
+    repeated Reference ref_parents = 6;
+    Reference ref_party = 7;
+
+    /* Other details like % of progress or new status */
+    map<string, string> details = 8; // StringValueMap
+}
+
+message PartyActivityPage {
+    int64 total = 1;
+    repeated PartyActivity data = 2;
+}
+
+// The activities service definition.
+service Activities {
+  rpc get_party_activities (PartyActivityPageRequest) returns (PartyActivityPageReply) {}
+  rpc log_party_activity (PartyActivityLogRequest) returns (PartyActivityObjectReply) {}
+  rpc batch_party_activities (PartyActivityBatchRequest) returns (PartyActivityOnlyErrorReply) {}
+  rpc delete_party_activities (PartyActivityDeleteRequest) returns (PartyActivityOnlyErrorReply) {}
+}
+
+// The request message containing the party_activity page request.
+message PartyActivityPageRequest {
+  string correlation_id = 1;
+  map<string, string> filter = 2;
+  PagingParams paging = 3;
+}
+
+// The response message containing the party_activity page response
+message PartyActivityPageReply {
+  ErrorDescription error = 1;
+  PartyActivityPage page = 2;
+}
+
+// The request message containing the party_activity page request.
+message PartyActivityLogRequest {
+  string correlation_id = 1;
+  PartyActivity activity = 2;
+}
+
+// The response message containing the party_activity object response
+message PartyActivityObjectReply {
+  ErrorDescription error = 1;
+  PartyActivity activity = 2;
+}
+
+// The request message containing the party_activity page request.
+message PartyActivityBatchRequest {
+  string correlation_id = 1;
+  repeated PartyActivity activities = 2;
+}
+
+// The request message containing the party_activity page request.
+message PartyActivityDeleteRequest {
+  string correlation_id = 1;
+  map<string, string> filter = 2;
+}
+
+// The response message containing the party_activity object response
+message PartyActivityOnlyErrorReply {
+  ErrorDescription error = 1;
+}

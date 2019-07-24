@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: mst
+  name: mst-microservice-sample-go-deploy
+  labels:
+    product_mst-microservice-sample-go: "true"
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        product_mst-microservice-sample-go: "true"
+    spec:
+      containers:
+      - name: mst-microservice-sample-go-pod
+        image: mstregistry.azurecr.io/mst-services/mst-microservice-sample-go:1.0.0-1-rc
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENV_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: mst-microservice-sample-go-config
+              key: env_name
+        - name: VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: mst-microservice-sample-go-config
+              key: version
+      imagePullSecrets:
+      - name: azure-container-registry-access
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: mst
+  name: mst-microservice-sample-go-svc
+  labels: 
+    product_mst-microservice-sample-go: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    #nodePort: 30022
+    protocol: TCP
+  selector:
+    product_mst-microservice-sample-go: "true"
