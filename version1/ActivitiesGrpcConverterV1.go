@@ -171,6 +171,7 @@ func fromPartyActivity(activity *PartyActivityV1) *protos.PartyActivity {
 
 	obj := &protos.PartyActivity{
 		Id:         activity.Id,
+		OrgId:      activity.OrgId,
 		Time:       convert.StringConverter.ToString(activity.Time),
 		Type:       activity.Type,
 		Party:      fromReference(activity.Party),
@@ -190,6 +191,7 @@ func toPartyActivity(obj *protos.PartyActivity) *PartyActivityV1 {
 
 	activity := &PartyActivityV1{
 		Id:         obj.Id,
+		OrgId:      obj.OrgId,
 		Time:       convert.DateTimeConverter.ToDateTime(obj.Time),
 		Type:       obj.Type,
 		Party:      toReference(obj.Party),

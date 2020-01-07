@@ -62,6 +62,8 @@ message PartyActivity {
 
     /* Other details like % of progress or new status */
     map<string, string> details = 8; // StringValueMap
+
+    string org_id = 9;
 }
 
 message PartyActivityPage {

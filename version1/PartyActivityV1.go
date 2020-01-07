@@ -8,7 +8,8 @@ import (
 
 type PartyActivityV1 struct {
 	/* Identification */
-	Id string `json:"id"`
+	Id    string `json:"id"`
+	OrgId string `json:"org_id"`
 
 	/* Identification fields */
 	Time  time.Time    `json:"time"`
